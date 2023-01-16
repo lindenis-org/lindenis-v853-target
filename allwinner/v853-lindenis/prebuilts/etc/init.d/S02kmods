@@ -1,0 +1,36 @@
+#!/bin/sh
+#
+# Load kernel modules....
+#
+
+MODULES_DIR="/lib/modules/`uname -r`"
+
+start() {
+    printf "Load kernel modules\n"
+    insmod $MODULES_DIR/gt911_ts.ko
+    insmod $MODULES_DIR/da380.ko
+}
+
+stop() {
+    printf "Unload kernel modules\n"
+    rmmod $MODULES_DIR/gt911_ts.ko
+    rmmod $MODULES_DIR/da380.ko
+}
+
+case "$1" in
+    start)
+	start
+	;;
+    stop)
+	stop
+	;;
+    restart|reload)
+	stop
+	start
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+esac
+
+exit $?

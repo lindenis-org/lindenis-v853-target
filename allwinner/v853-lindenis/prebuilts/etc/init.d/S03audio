@@ -1,0 +1,59 @@
+#!/bin/sh
+#
+# Start audio
+#
+
+
+start() {
+	printf "Starting audio: "
+	if [ -f "/etc/media/startup.wav" ];then
+		if [ -f "/usr/bin/tinyplay" ];then
+			tinymix set 'LINEOUT Switch' 1
+			tinymix set 'SPK Switch' 1
+			tinymix set 'LINEOUT volume' 18
+			tinyplay /etc/media/startup.wav & 
+		else 
+			echo "no tinyplay tool"
+		fi
+
+		echo "Successfully play boot music"
+	else
+		echo "no startup music file"
+	fi
+}
+
+stop() {
+	printf "Stopping audio: "
+	if [ -f "/etc/media/shutdown.wav" ];then
+		if [ -f "/usr/bin/tinyplay" ];then
+			tinymix set 'LINEOUT Switch' 1
+			tinymix set 'SPK Switch' 1
+			tinymix set 'LINEOUT volume' 18
+			tinyplay /etc/media/shutdown.wav 
+		else 
+			echo "no tinyplay tool"
+		fi
+
+		echo "Successfully play shutdown music"
+	else
+		echo "no shutdown music file"
+	fi
+}
+
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  restart|reload)
+	stop
+	start
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+esac
+
+exit $?
